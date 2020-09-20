@@ -1,45 +1,33 @@
 import React from "react";
 
 class PizzaForm extends React.Component {
-  constructor(props) {
-    super();
-    this.state = {
-      topping: props.editPizza.topping,
-    };
+  state = {
+    topping: "",
+    size: "",
+    vegetarian: "",
+    id: "",
+  };
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      topping: nextProps.editPizza.topping,
+      size: nextProps.editPizza.size,
+      vegetarian: nextProps.editPizza.vegetarian,
+      id: nextProps.editPizza.id,
+    });
   }
 
-  // componentDidMount(state) {
-  //   state = {
-  //     topping: `${this.props.editPizza.topping}`,
-  //     size: "",
-  //     vegetarian: "",
-  //   };
-  // }
-
-  // static getDerivedStateFromProps(props, state) {
-  //   // console.log("Topping", state.topping, props.editPizza);
-  //   if (state.topping !== props.editPizza.topping) {
-  //     return {
-  //       topping: props.editPizza.topping,
-  //       size: props.editPizza.size,
-  //       vegetarian: props.editPizza.vegetarian,
-  //     };
-  //   }
-  // }
-
-  // componentDidMount() {
-  //   this.state.topping = this.props.editPizza.topping;
-  // }
-
   changeHandler = (e) => {
-    console.log(e.target);
     this.setState({
       [e.target.name]: e.target.value,
     });
   };
 
+  localSubmitHandler = () => {
+    this.props.submitHandler(this.state);
+  };
+
   render() {
-    console.log(this.state.topping);
     return (
       <div className="form-row">
         <div className="col-5">
@@ -53,7 +41,12 @@ class PizzaForm extends React.Component {
           />
         </div>
         <div className="col">
-          <select value={null} className="form-control">
+          <select
+            value={this.state.size}
+            onChange={this.changeHandler}
+            className="form-control"
+            name="size"
+          >
             <option value="Small">Small</option>
             <option value="Medium">Medium</option>
             <option value="Large">Large</option>
@@ -64,8 +57,10 @@ class PizzaForm extends React.Component {
             <input
               className="form-check-input"
               type="radio"
-              value="Vegetarian"
+              value={true}
+              name="vegetarian"
               checked={null}
+              onChange={this.changeHandler}
             />
             <label className="form-check-label">Vegetarian</label>
           </div>
@@ -73,8 +68,10 @@ class PizzaForm extends React.Component {
             <input
               className="form-check-input"
               type="radio"
-              value="Not Vegetarian"
+              name="vegetarian"
+              value={false}
               checked={null}
+              onChange={this.changeHandler}
             />
             <label className="form-check-label">Not Vegetarian</label>
           </div>
@@ -83,7 +80,7 @@ class PizzaForm extends React.Component {
           <button
             type="submit"
             className="btn btn-success"
-            onClick={console.log}
+            onClick={this.localSubmitHandler}
           >
             Submit
           </button>
